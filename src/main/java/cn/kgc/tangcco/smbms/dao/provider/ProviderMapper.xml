@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.tangcco.smbms.dao.provider.ProviderMapper">
+    <!--获得所有供应商-->
+    <select id="providerList" resultType="provider">
+        select * from smbms_provider;
+    </select>
+    <!--分页显示供应商-->
+    <select id="getProviderList" resultType="provider">
+        select * from smbms_provider
+        <trim prefix="where" prefixOverrides="and">
+            <if test="proCode!=null">
+                proCode=#{proCode}
+            </if>
+            <if test="proName!=null and proName!=''">
+                and proName like concat('%',#{proName},'%')
+            </if>
+        </trim>
+    </select>
+    <!--根据id删除供应商-->
+    <delete id="delProvider" parameterType="int">
+        delete from smbms_provider where id=#{id}
+    </delete>
+    <!--根据id更新供应商-->
+    <select id="getProviderById" parameterType="int" resultType="provider">
+        select * from smbms_provider where id=#{id}
+    </select>
+    <update id="updateProvider" parameterType="provider">
+        update smbms_provider
+        <trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+            <if test="proCode!=null and proCode!=''">
+                proCode=#{proCode},
+            </if>
+            <if test="proName!=null and proName!=''">
+                proName=#{proName},
+            </if>
+            <if test="proDesc!=null and proDesc!=''">
+                proDesc=#{proDesc},
+            </if>
+            <if test="proContact!=null and proContact!=''">
+                proContact=#{proContact},
+            </if>
+            <if test="proPhone!=null  and proPhone!=''">
+                proPhone=#{proPhone},
+            </if>
+            <if test="proAddress!=null and proAddress!=''">
+                proAddress=#{proAddress},
+            </if>
+            <if test="proFax!=null and proFax!=''">
+                proFax=#{proFax},
+            </if>
+            <if test="createdBy!=null">
+                createdBy=#{createdBy},
+            </if>
+            <if test="creationDate!=null">
+                creationDate=#{creationDate},
+            </if>
+            <if test="modifyDate!=null">
+                modifyDate=#{modifyDate},
+            </if>
+            <if test="modifyBy!=null">
+                modifyBy=#{modifyBy},
+            </if>
+        </trim>
+    </update>
+    <!--增加供应商-->
+    <insert id="addProvider" parameterType="provider">
+        insert into smbms_provider(proCode,
+                                   proName,
+                                   proDesc,
+                                   proContact,
+                                   proPhone,
+                                   proAddress,
+                                   proFax,
+                                   createdBy,
+                                   creationDate
+                                  )values(#{proCode},#{proName},#{proDesc},#{proContact},#{proPhone},
+                                                   #{proAddress},#{proFax},#{createdBy},#{creationDate})
+    </insert>
+</mapper>

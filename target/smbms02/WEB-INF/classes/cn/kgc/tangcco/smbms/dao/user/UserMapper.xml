@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.tangcco.smbms.dao.user.UserMapper">
+    <!--登陆-->
+    <select id="getUser" parameterType="string" resultType="user">
+        select * from smbms_user where userCode=#{userCode}
+    </select>
+    <!--分页显示用户(根据名字模糊查询,权限)-->
+    <select id="getUserList" resultType="user">
+        select su.*,sr.roleName userRoleName
+        from smbms_user su inner join smbms_role sr on su.userRole=sr.id
+        <trim prefix="where" prefixOverrides="and | or" >
+            <if test="userName!=null and userName!=''">
+                userName like concat('%',#{userName},'%')
+            </if>
+            <if test="userRole!=null and userRole!=0 ">
+                and userRole=#{userRole}
+            </if>
+        </trim>
+    </select>
+    <!--根据id删除用户-->
+    <delete id="delUser" parameterType="int">
+        delete from smbms_user where id=#{id}
+    </delete>
+    <!--根据id查询用户-->
+    <select id="getUserById" parameterType="int" resultType="user">
+        select su.*,sr.roleName userRoleName
+            from smbms_user su inner join smbms_role sr on su.userRole=sr.id
+                 where su.id=#{id}
+    </select>
+    <!--更新用户-->
+    <select id="getUserByUserCode" parameterType="string" resultType="user">
+        select * from smbms_user where userCode=#{userCode}
+    </select>
+    <update id="updateUser" parameterType="user">
+        update smbms_user
+        <trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+            <if test="userRole!=null">
+                userRole=#{userRole},
+            </if>
+            <if test="userName!=null and userName!='' ">
+                userName=#{userName},
+            </if>
+            <if test="userCode!=null and userCode!=''">
+                userCode=#{userCode},
+            </if>
+            <if test="userPassword!=null and userPassword!=''">
+                userPassword=#{userPassword},
+            </if>
+            <if test="birthday!=null">
+                birthday=#{birthday},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone=#{phone},
+            </if>
+            <if test="address!=null and address!=''">
+                address=#{address},
+            </if>
+            <if test="modifyBy!=null">
+                modifyBy=#{modifyBy},
+            </if>
+            <if test="modifyDate!=null">
+                modifyDate=#{modifyDate}
+            </if>
+        </trim>
+    </update>
+    <!--创建用户-->
+    <insert id="addUser" parameterType="user">
+        INSERT INTO smbms.smbms_user (userCode, userName, userPassword, gender, birthday, phone, address, userRole, createdBy, creationDate,idPicPath,workPicPath)
+        VALUES(#{userCode},#{userName},#{userPassword},#{gender},#{birthday},#{phone},#{address},#{userRole},#{createdBy},#{creationDate},#{idPicPath},#{workPicPath});
+    </insert>
+</mapper>
